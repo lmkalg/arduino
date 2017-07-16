@@ -1,6 +1,12 @@
 #include <Arduino.h>
 #include "RobotMovementController.h"
 
+int TIME_TO_TURN = 800;
+int TIME_TO_GO_BACKWARDS = 1000;
+int RANDOM_BASE_TIME = 1000;
+int RANDOM_MAX_RANGE_TIME = 3000;
+
+
 //Public
 void RobotMovementController::go_forwards(){
     go_forwards_left_engine();
@@ -10,25 +16,38 @@ void RobotMovementController::go_forwards(){
 void RobotMovementController::go_backwards(){
     go_backwards_left_engine();
     go_backwards_right_engine();
-    delay(1000);
+    delay(TIME_TO_GO_BACKWARDS);
 
 }
 
 void RobotMovementController::turn_left(){
     go_forwards_right_engine();
     stop_left_engine();
-    delay(500);
+    delay(TIME_TO_TURN);
 }
 
 void RobotMovementController::turn_right(){
     go_forwards_left_engine();
     stop_right_engine();
-    delay(500);
+    delay(TIME_TO_TURN);
 }
 
 void RobotMovementController::stop(){
     stop_right_engine();
     stop_left_engine();
+}
+
+void RobotMovementController::do_random_slalom(){
+    if (random(2) % 2 == 0){
+        go_forwards_right_engine();
+        go_backwards_left_engine();
+    }
+    else{
+        go_backwards_right_engine();
+        go_forwards_left_engine();
+    }
+
+    delay(random(RANDOM_MAX_RANGE_TIME) + RANDOM_BASE_TIME);
 }
 
 

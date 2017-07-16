@@ -4,7 +4,6 @@
 //#include "libs/auxiliaries.h"
 #include <Servo.h>
 
-
 // Seting pin
 int pin_right_engine_2 = 6; // ROJO
 int pin_right_engine_1 = 5; // AMRILLO
@@ -95,7 +94,7 @@ bool is_object_close(int distance){
 }
 
 bool is_false_read(int distance){
-    return distance < FALSE_READ_THRESHOLD;
+    return distance <= FALSE_READ_THRESHOLD or distance > MAX_DISTANCE;
 }
 
 void turn_and_stop(Servo servo, NewPing sensor, RobotMovementController rmv_controller){
@@ -136,8 +135,9 @@ void setup() {
     Serial.begin(SERIAL_FREQ);
     pinMode(13, OUTPUT); // ? Debug? 
     starting_delay();
-    rmv_controller.go_forwards();
     amount_of_measures = 0;
+    rmv_controller.do_random_slalom();
+    rmv_controller.stop();
 }
 
 void loop(){
@@ -155,12 +155,12 @@ void loop(){
             }
             turn_and_stop(servo, sensor, rmv_controller);
         }
-        else{
-            if (amount_of_measures > MEASURES_BORING){
-                turn_and_stop(servo, sensor, rmv_controller);
-                amount_of_measures = 0;
-            }
-        }
+        //else{
+        //    if (amount_of_measures > MEASURES_BORING){
+        //        rmv_controller.do_random_slalom()
+        //        amount_of_measures = 0;
+        //    }
+        //}
     }
     rmv_controller.go_forwards();
     delay(next_distance_read_delay);

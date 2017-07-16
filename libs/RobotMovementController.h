@@ -10,6 +10,7 @@ class RobotMovementController{
         void turn_right();
         void turn_left();
         void stop();
+        void do_random_slalom();
 
     private:
         //Variables
